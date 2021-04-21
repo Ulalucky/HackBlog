@@ -149,14 +149,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
         favorite.save()
         return favorite
 
-    # def to_representation(self, instance):
-    #     request = self.context.get('request')
-    #     user = request.user.id
-    #     representation = super().to_representation(instance).get('user')
-    #     if user == representation:
-    #         representation = super().to_representation(instance)
-    #     return representation
-
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
