@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from account.models import MyUser
 from rest_framework.pagination import PageNumberPagination
@@ -60,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
 
 class CreateNewPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    # activation_code = serializers.CharField(max_length=20)
+    activation_code = serializers.CharField(max_length=20)
     password = serializers.CharField(min_length=6, required=True)
     password_confirmation = serializers.CharField(min_length=6, required=True)
 
@@ -70,11 +71,13 @@ class CreateNewPasswordSerializer(serializers.Serializer):
         return email
 
     def validate_activation_code(self, code):
-        if MyUser.objects.filter(activation_code=code, is_active=False).exists():
+        if not MyUser.objects.filter(activation_code=code, is_active=False).exists():
             raise serializers.ValidationError('Wrong activation code')
         return code
 
     def validate(self, attrs):
+        email = attrs.get('email')
+        user = get_object_or_404(MyUser, email=email)
         password = attrs.get('password')
         password_confirmation = attrs.get('password_confirmation')
         if password != password_confirmation:

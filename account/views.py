@@ -50,7 +50,7 @@ class ForgotPassword(APIView):
         user.is_active = False
         user.create_activation_code()
         user.save()
-        send_activation_code(email=email, activation_code=user.activation_code, is_password=False)
+        send_activation_code(email=email, activation_code=user.activation_code, is_password=True)
         return Response('Send activation code', status=status.HTTP_200_OK)
 
 

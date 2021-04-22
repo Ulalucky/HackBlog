@@ -8,10 +8,9 @@ def send_activation_code(email, activation_code, is_password):
     else:
          message = activation_code
     send_mail(
-        'HackBlog Activation',
+        'Hack Activation',
         message,
         'admin@admin.com',
         [email, ],
         fail_silently=False
     )
-

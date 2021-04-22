@@ -11,8 +11,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets, status
 from datetime import timedelta
+from main.parsing import pars
 from .models import Category, Post, PostImage, Like, Comment, Favorite, Rating
-from .serializers import CategorySerializer, PostSerializer, PostImageSerializer, LikeSerializer, CommentSerializer, FavoriteSerializer, RatingSerializer
+from .serializers import CategorySerializer, PostSerializer, PostImageSerializer, LikeSerializer, CommentSerializer,\
+    FavoriteSerializer, RatingSerializer, ParsSerializer
 from rest_framework.pagination import PageNumberPagination
 from .permissions import IsPostAuthor, IsAuthorPermission
 
@@ -66,7 +68,7 @@ class PostsViewSet(viewsets.ModelViewSet):
     def search(self, request, pk=None):
         q = request.query_params.get('q')
         queryset = self.get_queryset()
-        queryset = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q))
+        queryset = queryset.filter(Q(title__icontains=q))
         serializer = PostSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -125,4 +127,11 @@ class RatingViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.Gen
 
     def get_serializer_context(self):
         return {'request': self.request, 'action': self.action}
+
+
+class ParsOcView(APIView):
+    def get(self, request):
+        dict_ = pars()
+        serializer = ParsSerializer(instance=dict_, many=True)
+        return Response(serializer.data)
 

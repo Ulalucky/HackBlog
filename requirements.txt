@@ -3,3 +3,5 @@ Pillow==8.1.1
 djangorestframework==3.11
 python-decouple==3.4
 drf-yasg
+bs4
+lxml
